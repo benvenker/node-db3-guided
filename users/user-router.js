@@ -34,10 +34,7 @@ router.get("/:id", (req, res) => {
 router.get("/:id/posts", (req, res) => {
   const { id } = req.params;
 
-  db("posts as p")
-    .join("users as u", "u.id", "p.user_id")
-    .select("p.id", "u.username", "p.contents")
-    .where({ user_id: id })
+  Users.findPosts(id)
     .then((posts) => {
       res.json(posts);
     })
@@ -49,8 +46,7 @@ router.get("/:id/posts", (req, res) => {
 router.post("/", (req, res) => {
   const userData = req.body;
 
-  db("users")
-    .insert(userData)
+  Users.add(userData)
     .then((ids) => {
       res.status(201).json({ created: ids[0] });
     })
